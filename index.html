@@ -163,9 +163,8 @@
     </div>
 
     <div class="footer-bar">
-```html
     <script>
-        // BANCO DE DADOS INTEGRADO COM SEUS ARQUIVOS DE IMAGEM LOCAIS
+        // BANCO DE DADOS ATUALIZADO COM LINKS DIRETOS PARA TESTE IMEDIATO
         const cardapio = [
             { id: 1, categoria: "burgers", popular: true, nome: "Classic Smash Burger", desc: "Blend de 100g prensado na chapa com crosta perfeita, queijo cheddar maçaricado, alface, tomate e maionese artesanal.", preco: 22.00, img: "smash.png" },
             { id: 2, categoria: "burgers", popular: false, nome: "Double Cheddar Bacon", desc: "Dois blends suculentos de 120g, dobro de queijo cheddar derretido, cebola caramelizada e maionese no pão de gergelim.", preco: 36.00, img: "double.png" },
@@ -191,7 +190,7 @@
                 const htmlCard = `
                     <div class="card">
                         <div class="card-img-container">
-                            <img class="card-img" src="${p.img}" alt="${p.nome}">
+                            <img class="card-img" src="${p.img}" alt="${p.nome}" onerror="this.src='https://unsplash.com'">
                             <span class="img-alert">Imagem meramente ilustrativa</span>
                             ${tagPopular}
                         </div>
@@ -232,9 +231,7 @@
 
         function modificarQtd(id, mudança) {
             if (!carrinho[id]) return;
-            
             carrinho[id] += mudança;
-            
             if (carrinho[id] <= 0) {
                 delete carrinho[id];
                 document.getElementById(`controls-${id}`).classList.remove('active');
@@ -314,7 +311,6 @@
             
             textoMensagem += `\n*Itens do Pedido:*\n`;
             let total = 0;
-            
             for (let id in carrinho) {
                 const item = cardapio.find(p => p.id == id);
                 textoMensagem += `• ${carrinho[id]}x ${item.nome} - R$ ${(item.preco * carrinho[id]).toFixed(2).replace('.', ',')}\n`;
