@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Club - Cardápio Fast Food Premium</title>
+    <!-- Fonte Moderna e Robusta -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Reset de Margens e Fontes */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #0b0b0f; color: #f3f4f6; padding-bottom: 130px; }
+        
+        /* Banner de Cabeçalho estilo App Premium */
+        .hero { 
+            background: linear-gradient(180deg, rgba(255, 69, 0, 0.15) 0%, rgba(11, 11, 15, 1) 100%), 
+                        url('https://unsplash.com');
+            background-size: cover;
+            background-position: center;
+            text-align: center; 
+            padding: 80px 20px 40px 20px; 
+            border-radius: 0 0 32px 32px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; letter-spacing: -1px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .hero p { font-size: 13px; color: #ff8c00; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 1px 5px rgba(0,0,0,0.8); }
+        
+        /* Alinhamento do Corpo do Site */
+        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+        .section-title { font-size: 14px; text-transform: uppercase; color: #ff4500; margin: 30px 0 16px 5px; letter-spacing: 1.5px; font-weight: 800; }
+        .grid-produtos { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        
+        /* Card Premium */
+        .card { 
+            background: #14141c; 
+            border-radius: 24px; 
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .card:hover { transform: translateY(-4px); border-color: rgba(255, 69, 0, 0.3); box-shadow: 0 15px 30px rgba(255, 69, 0, 0.1); }
+        
+        /* Container da Imagem */
+        .card-img-container { width: 100%; height: 200px; position: relative; background: #222; overflow: hidden; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        
+        /* Legendas e Tags Visuais */
+        .img-alert { position: absolute; bottom: 8px; left: 12px; font-size: 10px; color: rgba(255,255,255,0.5); background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 4px; pointer-events: none; }
+        .tag-popular { position: absolute; top: 12px; right: 12px; background: #ff4500; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(255,69,0,0.4); }
+
+        /* Conteúdo Interno do Card */
+        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 10px; }
+        .card-body h3 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+        .card-price { font-size: 18px; font-weight: 800; color: #ff8c00; white-space: nowrap; }
+        .card-body p { font-size: 13px; color: #9ca3af; line-height: 1.5; margin-bottom: 18px; }
+        
+        /* Botão Interativo */
+        .btn-select { width: 100%; background: #252533; color: #fff; border: none; padding: 14px; border-radius: 14px; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s ease; display: flex; justify-content: center; align-items: center; }
+        .btn-select:hover { background: #313147; }
+        .btn-select.selected { background: #22c55e; color: #fff; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4); }
+        
+        /* Barra de Rodapé Flutuante (Efeito Vidro) */
+        .footer-bar { 
+            position: fixed; bottom: 20px; left: 20px; right: 20px; background: rgba(20, 20, 28, 0.85); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); padding: 18px 24px; display: flex; justify-content: space-between; 
+            align-items: center; max-width: 560px; margin: 0 auto; border-radius: 24px; z-index: 999;
+        }
+        .total-info p { font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; }
+        .total-info h2 { font-size: 24px; color: #fff; font-weight: 800; letter-spacing: -0.5px; }
+        
+        .btn-send { background: #22c55e; color: #fff; border: none; padding: 14px 28px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); }
+        .btn-send:hover { background: #16a34a; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1 id="nome-loja">BURGER CLUB</h1>
+        <p>⚡ Fast Delivery Integrado via WhatsApp</p>
+    </div>
+
+    <div class="container">
+        <div class="section-title">🔥 Os Mais Vendidos</div>
+        <div id="lista-burgers" class="grid-produtos"></div>
+
+        <div class="section-title">🥤 Acompanhamentos e Bebidas</div>
+        <div id="lista-extras" class="grid-produtos"></div>
+    </div>
+
+    <div class="footer-bar">
+        <div class="total-info">
+            <p>Seu Pedido</p>
+            <h2 id="txt-total">R$ 0,00</h2>
+        </div>
+        <button class="btn-send" onclick="enviarPedido()">Finalizar Pedido</button>
+    </div>
+    <script>
+        const cardapio = [
+            { id: 1, categoria: "burgers", popular: true, nome: "Classic Smash Burger", desc: "Blend de 100g prensado na chapa com crosta perfeita, queijo cheddar maçaricado e maionese artesanal da casa.", preco: 22.00, img: "https://unsplash.com" },
+            { id: 2, categoria: "burgers", popular: false, nome: "Double Cheddar Bacon", desc: "Dois blends suculentos de 120g, dobro de queijo cheddar derretido, bacon em fatias crocantes e molho BBQ defumado.", preco: 36.00, img: "https://unsplash.com" },
+            { id: 3, categoria: "burgers", popular: true, nome: "Combo Burger + Batata + Refri", desc: "O campeão de vendas! 1 Classic Smash Burger + 1 Porção Individual de Batatas Fritas Palito + 1 Refrigerante em lata trincando de gelado.", preco: 42.00, img: "https://unsplash.com" },
+            { id: 4, categoria: "extras", popular: false, nome: "Batata Frita Rústica Grande", desc: "Batatas fritas com corte rústico especial, temperadas com páprica defumada, alecrim e servidas com maionese de alho.", preco: 18.00, img: "https://unsplash.com" },
+            { id: 5, categoria: "extras", popular: false, nome: "Coca-Cola Original Lata", desc: "Refrescante, trincando de gelada para acompanhar seu burger.", preco: 6.00, img: "https://unsplash.com" }
+        ];
+
+        let carrinho = [];
+
+        function renderizarCardapio() {
+            const containerBurgers = document.getElementById('lista-burgers');
+            const containerExtras = document.getElementById('lista-extras');
+            
+            containerBurgers.innerHTML = '';
+            containerExtras.innerHTML = '';
+
+            cardapio.forEach(p => {
+                const tagPopular = p.popular ? `<span class="tag-popular">Mais Pedido ★</span>` : '';
+                
+                const htmlCard = `
+                    <div class="card">
+                        <div class="card-img-container">
+                            <img class="card-img" src="${p.img}" alt="${p.nome}">
+                            <span class="img-alert">Imagem meramente ilustrativa</span>
+                            ${tagPopular}
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="card-header-row">
+                                    <h3>${p.nome}</h3>
+                                    <span class="card-price">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
+                                </div>
+                                <p>${p.desc}</p>
+                            </div>
+                            <button class="btn-select" id="btn-${p.id}" onclick="alternarItem(${p.id})">
+                                <span id="txt-btn-${p.id}">Adicionar ao Carrinho</span>
+                            </button>
+                        </div>
+                    </div>`;
+                
+                if(p.categoria === "burgers") {
+                    containerBurgers.innerHTML += htmlCard;
+                } else {
+                    containerExtras.innerHTML += htmlCard;
+                }
+            });
+        }
+
+        function alternarItem(id) {
+            const index = carrinho.indexOf(id);
+            const btn = document.getElementById(`btn-${id}`);
+            const txtBtn = document.getElementById(`txt-btn-${id}`);
+            
+            if (index === -1) {
+                carrinho.push(id);
+                txtBtn.innerText = "Item Adicionado ✓";
+                btn.classList.add('selected');
+            } else {
+                carrinho.splice(index, 1);
+                txtBtn.innerText = "Adicionar ao Carrinho";
+                btn.classList.remove('selected');
+            }
+            calcularTotal();
+        }
+
+        function calcularTotal() {
+            let total = 0;
+            carrinho.forEach(id => {
+                const item = cardapio.find(p => p.id === id);
+                total += item.preco;
+            });
+            document.getElementById('txt-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function gerarIdPedido() {
+            const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const numAleatorio = Math.floor(1000 + Math.random() * 9000);
+            const letraAleatoria = letras[Math.floor(Math.random() * letras.length)];
+            return `#${letraAleatoria}-${numAleatorio}`;
+        }
+
+        function enviarPedido() {
+            if (carrinho.length === 0) {
+                alert("Seu carrinho está vazio! Adicione um lanche irresistível antes de fechar.");
+                return;
+            }
+
+            const idPedido = gerarIdPedido();
+            let textoMensagem = `🍔 *BURGER CLUB - NOVO PEDIDO (${idPedido})*\n`;
+            textoMensagem += `⚠️ _Confirme este ID com o entregador para sua segurança!_\n\n`;
+            textoMensagem += `*Itens Escolhidos:*\n`;
+            
+            let total = 0;
+            carrinho.forEach(id => {
+                const item = cardapio.find(p => p.id === id);
+                textoMensagem += `• 1x ${item.nome} - R$ ${item.preco.toFixed(2).replace('.', ',')}\n`;
+                total += item.preco;
+            });
+
+            textoMensagem += `\n*Total:* R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
+            textoMensagem += `_Por favor, responda com o seu Nome e o Endereço de entrega completo:_`;
+            
+            const numeroWhats = "5531999999999"; 
+            const url = `https://whatsapp.com{numeroWhats}&text=${encodeURIComponent(textoMensagem)}`;
+            window.open(url, '_blank');
+        }
+
+        renderizarCardapio();
+    </script>
+</body>
+</html>
