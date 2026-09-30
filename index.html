@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Burger do Vale | Cardápio e pedidos</title>
+<meta name="description" content="Veja o cardápio e faça seu pedido pelo WhatsApp.">
+<meta name="theme-color" content="#C8321E">
+<!-- Troque o nome da loja aqui, no <title> e no og:title -->
+<meta property="og:title" content="Burger do Vale | Cardápio e pedidos">
+<meta property="og:description" content="Veja o cardápio e faça seu pedido pelo WhatsApp.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C8321E;--mustard:#FFC93C;--paper:#FFFDF7;--ink:#2B1B14;--muted:#7a675c;--line:#eadfce}
+*{box-sizing:border-box;margin:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--paper);color:var(--ink);padding-bottom:96px;line-height:1.45}
+h1,h2{font-family:'Alfa Slab One',Georgia,serif;font-weight:400}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.hero{background:var(--mustard);padding:44px 20px 36px}
+.wrap{max-width:720px;margin:0 auto}
+.hero h1{font-size:clamp(2.4rem,9vw,4rem);line-height:1.02;color:var(--red)}
+.hero p{margin-top:12px;font-size:1.1rem;max-width:32ch}
+.info{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.pill{background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 16px;font-size:.92rem;text-decoration:none;font-weight:500}
+.pill.alt{background:var(--paper);color:var(--ink)}
+main{padding:8px 20px}
+h2{font-size:1.5rem;color:var(--red);margin:32px 0 6px}
+.item{display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.item b{font-size:1.05rem}
+.item p{color:var(--muted);font-size:.93rem;margin-top:2px}
+.price{font-weight:700}
+.thumb{width:92px;height:92px;object-fit:cover;border-radius:12px;flex:none}
+.txt{flex:1;min-width:0}
+.buy{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.pill.open{background:#1f7a3a}
+.pill.closed{background:#8a2b2b}
+.pix{display:none;background:#fff;border:1.5px dashed var(--red);border-radius:10px;padding:10px;margin-top:10px;font-size:.92rem}
+.pix button{margin-left:6px;padding:4px 12px;border-radius:8px;border:1.5px solid var(--ink);background:var(--paper);font-weight:700}
+.step{display:flex;align-items:center;gap:10px;align-self:center}
+.step button{width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);font-size:1.2rem;font-weight:700;line-height:1}
+.step button.add{background:var(--red);border-color:var(--red);color:#fff}
+.step span{min-width:18px;text-align:center;font-weight:700}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--paper);padding:14px 20px}
+.bar:not(.on) button{background:#5a4a40}
+.how{background:var(--ink);color:var(--paper);padding:14px 20px;font-size:.9rem}
+.how .wrap{display:flex;flex-wrap:wrap;gap:8px 22px}
+.how b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--mustard);color:var(--ink);margin-right:7px}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--mustard);color:var(--ink);font-weight:700;padding:12px 18px;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:88%;text-align:center;display:none;z-index:4}
+.toast.on{display:block}
+.bar button{width:100%;max-width:720px;margin:0 auto;display:flex;justify-content:space-between;background:var(--red);color:#fff;border:0;border-radius:12px;padding:14px 18px;font-weight:700;font-size:1rem}
+.wa{position:fixed;right:16px;bottom:88px;width:56px;height:56px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.wa svg{width:30px;height:30px;fill:#fff}
+.sheet{position:fixed;inset:0;background:rgba(43,27,20,.6);display:none;align-items:flex-end;justify-content:center;z-index:5}
+.sheet.on{display:flex}
+.panel{background:var(--paper);width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:22px 20px}
+.panel h2{margin-top:0}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
+.total{font-size:1.2rem;font-weight:700;margin:14px 0}
+label{display:block;font-weight:500;margin-top:12px;font-size:.93rem}
+input,select,textarea{width:100%;margin-top:4px;padding:11px;border:1.5px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+.send{width:100%;margin-top:18px;background:#25D366;color:#0b3d1f;border:0;border-radius:12px;padding:15px;font-weight:700;font-size:1rem}
+.close{background:none;border:0;color:var(--muted);margin-top:10px;width:100%;padding:8px}
+footer{padding:28px 20px;color:var(--muted);font-size:.9rem;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <h1 id="nome"></h1>
+  <p id="slogan"></p>
+  <div class="info">
+    <span class="pill" id="status"></span>
+    <span class="pill" id="horario"></span>
+    <a class="pill alt" id="comoChegar" target="_blank" rel="noopener">Como chegar</a>
+    <a class="pill alt" id="insta" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</div></header>
+
+<section class="how"><div class="wrap">
+  <div><b>1</b>Escolha os itens com o botão +</div>
+  <div><b>2</b>Toque em “Ver sacola” no rodapé</div>
+  <div><b>3</b>Envie o pedido no WhatsApp</div>
+</div></section>
+
+<main><div class="wrap" id="menu"></div></main>
+<div class="toast" id="toast" role="status"></div>
+<footer id="rodape"></footer>
+
+<a class="wa" id="waFloat" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 32 32"><path d="M16 3a13 13 0 0 0-11 19.8L3 29l6.400-2A13 13 0 1 0 16 3zm0 23.700c-2 0-3.900-.6-5.500-1.600l-.4-.2-3.800 1.200 1.200-3.700-.3-.4A10.700 10.700 0 1 1 16 26.700zm5.900-8c-.3-.2-1.900-.9-2.200-1s-.5-.2-.7.200-.8 1-1 1.200-.4.200-.7.100a8.700 8.700 0 0 1-4.300-3.800c-.3-.6.300-.5.900-1.700.1-.2 0-.4 0-.5l-1-2.300c-.3-.6-.5-.5-.7-.5h-.6a1.200 1.200 0 0 0-.9.400 3.700 3.700 0 0 0-1.100 2.700 6.400 6.400 0 0 0 1.300 3.400c.2.200 2.300 3.600 5.600 5 2 .9 2.900.9 3.400.8a3 3 0 0 0 2-1.400 2.500 2.500 0 0 0 .2-1.400c-.1-.1-.3-.2-.6-.4z"/></svg>
+</a>
+
+<div class="bar" id="bar"><button id="abrir"><span id="qtd"></span><span id="totalBar"></span></button></div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Sua sacola">
+  <div class="panel">
+    <h2>Sua sacola</h2>
+    <div id="linhas"></div>
+    <div class="total" id="total"></div>
+    <label>Seu nome<input id="cli" autocomplete="name"></label>
+    <label>Como quer receber?
+      <select id="tipo"><option>Entrega</option><option>Retirada no local</option></select>
+    </label>
+    <label id="endLabel">Endereço de entrega<input id="end" autocomplete="street-address"></label>
+    <label>Forma de pagamento
+      <select id="pag"><option>Pix</option><option>Cartão (na entrega ou retirada)</option><option>Dinheiro</option></select>
+    </label>
+    <label id="trocoLabel" style="display:none">Troco para quanto?<input id="troco" inputmode="decimal" placeholder="Ex.: 50"></label>
+    <div class="pix" id="pixBox"></div>
+    <label>Observações (opcional)<textarea id="obs" rows="2" placeholder="Ex.: sem cebola"></textarea></label>
+    <button class="send" id="enviar">Enviar pedido no WhatsApp</button>
+    <button class="close" id="fechar">Continuar escolhendo</button>
+  </div>
+</div>
+
+<script>
+/* ===== EDITE AQUI OS DADOS DA LOJA ===== */
+const LOJA = {
+  nome: "Burger do Vale",
+  slogan: "Hambúrguer artesanal, do jeito que você gosta. Peça direto, sem taxa de aplicativo.",
+  whatsapp: "5531999999999",          // DDI + DDD + número, só dígitos
+  endereco: "Av. Exemplo, 123 - Ipatinga, MG",
+  horario: "Ter a dom, 18h às 23h",
+  horarios: [[18,23],null,[18,23],[18,23],[18,23],[18,23],[18,23]], // dom a sáb, fecha até 23h59; null = fechado
+  pix: "31999999999",                  // chave Pix da loja ("" para ocultar)
+  instagram: "burgerdovale",           // usuário sem @ ("" para ocultar)
+  taxa: 5,                             // taxa de entrega em R$ (0 = sem taxa)
+  credito: "Site criado por Seu Nome"  // aparece no rodapé ("" para ocultar)
+};
+const CARDAPIO = [
+  { categoria: "Hambúrgueres", itens: [
+    { id: 1, nome: "Clássico", foto: "fotos/classico.jpg", desc: "Pão brioche, blend 150g, queijo, alface e tomate", preco: 24.9 },
+    { id: 2, nome: "Bacon Duplo", desc: "Dois blends 120g, bacon crocante, cheddar e molho da casa", preco: 34.9 },
+    { id: 3, nome: "Frango Crocante", desc: "Filé empanado, maionese temperada e salada", preco: 26.9 }
+  ]},
+  { categoria: "Acompanhamentos", itens: [
+    { id: 4, nome: "Batata frita", desc: "Porção individual com sal e ervas", preco: 14.0 },
+    { id: 5, nome: "Anéis de cebola", desc: "Porção com molho barbecue", preco: 16.0 }
+  ]},
+  { categoria: "Bebidas", itens: [
+    { id: 6, nome: "Refrigerante lata", desc: "350 ml", preco: 6.0 },
+    { id: 7, nome: "Suco natural", desc: "Laranja ou limão, 400 ml", preco: 9.0 }
+  ]}
+];
+/* ======================================== */
+
+const R = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const $ = id => document.getElementById(id);
+const sacola = {};
+const todos = CARDAPIO.flatMap(c => c.itens);
+
+document.title = LOJA.nome + " | Cardápio e pedidos";
+$("nome").textContent = LOJA.nome;
+$("slogan").textContent = LOJA.slogan;
+$("horario").textContent = LOJA.horario;
+$("rodape").textContent = LOJA.endereco + " • " + LOJA.nome + (LOJA.credito ? " • " + LOJA.credito : "");
+if (LOJA.instagram) $("insta").href = "https://instagram.com/" + LOJA.instagram; else $("insta").remove();
+atualizarStatus();
+setInterval(atualizarStatus, 60000);
+$("comoChegar").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(LOJA.endereco);
+$("waFloat").href = "https://wa.me/" + LOJA.whatsapp + "?text=" + encodeURIComponent("Olá! Vim pelo site e gostaria de fazer um pedido.");
+
+function montarMenu() {
+  $("menu").innerHTML = CARDAPIO.map(c =>
+    `<h2>${c.categoria}</h2>` + c.itens.map(i => `
+    <div class="item">
+      ${i.foto ? `<img class="thumb" src="${i.foto}" alt="${i.nome}" loading="lazy" onerror="this.remove()">` : ""}
+      <div class="txt"><b>${i.nome}</b><p>${i.desc}</p><div class="buy"><span class="price">${R(i.preco)}</span><div class="step" id="s${i.id}"></div></div></div>
+    </div>`).join("")).join("");
+  todos.forEach(i => botoes(i.id));
+}
+
+function botoes(id) {
+  const q = sacola[id] || 0;
+  $("s" + id).innerHTML = q
+    ? `<button aria-label="Remover um" data-d="-1" data-id="${id}">−</button><span>${q}</span><button class="add" aria-label="Adicionar um" data-d="1" data-id="${id}">+</button>`
+    : `<button class="add" aria-label="Adicionar" data-d="1" data-id="${id}">+</button>`;
+}
+
+let tt;
+function avisar(t) {
+  $("toast").textContent = t;
+  $("toast").classList.add("on");
+  clearTimeout(tt);
+  tt = setTimeout(() => $("toast").classList.remove("on"), 4000);
+}
+
+function mudar(id, d) {
+  const antes = qtd();
+  sacola[id] = Math.max(0, (sacola[id] || 0) + d);
+  if (!sacola[id]) delete sacola[id];
+  botoes(id);
+  atualizar();
+  if (d > 0 && antes === 0) avisar("Item adicionado! Toque em “Ver sacola” lá embaixo para finalizar.");
+}
+
+function total() { return todos.reduce((s, i) => s + (sacola[i.id] || 0) * i.preco, 0); }
+function qtd() { return Object.values(sacola).reduce((a, b) => a + b, 0); }
+
+function atualizar() {
+  const n = qtd();
+  $("bar").classList.toggle("on", n > 0);
+  $("qtd").textContent = n ? "Ver sacola (" + n + (n === 1 ? " item)" : " itens)") : "Sua sacola está vazia";
+  $("totalBar").textContent = n ? R(total()) : "Escolha um item";
+  $("linhas").innerHTML = todos.filter(i => sacola[i.id]).map(i => `
+    <div class="row"><span>${sacola[i.id]}x ${i.nome}</span><span>${R(sacola[i.id] * i.preco)}</span></div>`).join("");
+  $("total").innerHTML = (taxa() ? "Taxa de entrega: " + R(taxa()) + "<br>" : "") + "Total: " + R(total() + taxa());
+  if (!n) $("sheet").classList.remove("on");
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button[data-id]");
+  if (b) mudar(+b.dataset.id, +b.dataset.d);
+});
+$("abrir").onclick = () => qtd() ? $("sheet").classList.add("on") : $("menu").scrollIntoView({ behavior: "smooth" });
+$("fechar").onclick = () => $("sheet").classList.remove("on");
+$("sheet").onclick = e => { if (e.target === $("sheet")) $("sheet").classList.remove("on"); };
+function taxa() { return $("tipo").value === "Entrega" ? LOJA.taxa : 0; }
+
+function atualizarStatus() {
+  const d = new Date(), h = d.getHours() + d.getMinutes() / 60, j = LOJA.horarios[d.getDay()];
+  const on = !!j && h >= j[0] && h < j[1];
+  $("status").textContent = on ? "● Aberto agora" : "● Fechado agora";
+  $("status").className = "pill " + (on ? "open" : "closed");
+}
+
+$("tipo").onchange = () => {
+  $("endLabel").style.display = $("tipo").value === "Entrega" ? "block" : "none";
+  atualizar();
+};
+
+$("pag").onchange = () => {
+  const v = $("pag").value, b = $("pixBox");
+  $("trocoLabel").style.display = v === "Dinheiro" ? "block" : "none";
+  b.style.display = v === "Pix" && LOJA.pix ? "block" : "none";
+  b.innerHTML = `Chave Pix: <b id="chave"></b><button type="button" id="copiar">Copiar</button>`;
+  $("chave").textContent = LOJA.pix;
+  $("copiar").onclick = () => {
+    if (navigator.clipboard) navigator.clipboard.writeText(LOJA.pix).then(() => { $("copiar").textContent = "Copiado!"; });
+  };
+};
+$("pag").onchange();
+
+$("enviar").onclick = () => {
+  const nome = $("cli").value.trim(), entrega = $("tipo").value === "Entrega", end = $("end").value.trim();
+  if (!nome) { $("cli").focus(); return alert("Informe seu nome para continuar."); }
+  if (entrega && !end) { $("end").focus(); return alert("Informe o endereço de entrega."); }
+  let msg = `Olá, ${LOJA.nome}! Quero fazer um pedido:\n\n`;
+  todos.filter(i => sacola[i.id]).forEach(i => { msg += `${sacola[i.id]}x ${i.nome} - ${R(sacola[i.id] * i.preco)}\n`; });
+  if (entrega && LOJA.taxa) msg += `\nTaxa de entrega: ${R(LOJA.taxa)}`;
+  msg += `\n*Total: ${R(total() + taxa())}*\n\nNome: ${nome}\n${entrega ? "Entrega em: " + end : "Retirada no local"}\nPagamento: ${$("pag").value}`;
+  if ($("pag").value === "Dinheiro" && $("troco").value.trim()) msg += ` (troco para R$ ${$("troco").value.trim()})`;
+  if ($("obs").value.trim()) msg += `\nObs.: ${$("obs").value.trim()}`;
+  window.open("https://wa.me/" + LOJA.whatsapp + "?text=" + encodeURIComponent(msg), "_blank");
+};
+
+montarMenu();
+atualizar();
+</script>
+</body>
+</html>
